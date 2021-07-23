@@ -1,0 +1,17 @@
+server:
+  port: 7000
+  servlet:
+    context-path: /sdk-debug/
+spring:
+  thymeleaf:
+    cache: false
+    servlet:
+      content-type: text/html
+    mode: HTML5
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+
+logging:
+  config=classpath:logback/logback-dev:
+    xml: logback-dev.xml
