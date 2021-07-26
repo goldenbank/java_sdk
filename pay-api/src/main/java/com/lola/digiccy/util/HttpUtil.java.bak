@@ -21,7 +21,7 @@ public class HttpUtil {
         Call call = client.newCall(request);
         Response response = call.execute();
         if (response.code() == SUCCESS) {
-            result = response.body().string();
+            result = response.body().String;
         }
         return result;
     }
