@@ -9,11 +9,23 @@
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+
+<style type="text/css">
+    /* body {
+         height: 1000px;
+         overflow-x:auto;
+        !* //overflow-y:auto;*!
+     }*/
+    #div {
+        height: 400px;
+        overflow-x: auto;
+    }
+</style>
 <body>
 <div class="page-header" style="text-align: center">
     <h5 style="color: goldenrod">金盾钱包SDK在线调试</h5>
 </div>
-<div class="row">
+<div class="row" style="padding-top: 20px">
     <div class="col-sm-1" style="padding: 10px 20px 10px 0px;">
         <p class="text" style="text-align: center ;color:deepskyblue ;padding-left: 30px">调试菜单</p>
         <nav class="navbar bg-light">
@@ -38,12 +50,12 @@
                 </li>
                 <br>
                 <li class="nav-item" style="padding:10px 0px 10px 0px">
-                    <a class="nav-link" href="./strategy" >币种策略</a>
+                    <a class="nav-link" href="./strategy">币种策略</a>
                 </li>
             </ul>
         </nav>
     </div>
-    <div class="col-sm-10" style="padding-left: 100px;">
+    <div class="col-sm-10" style="padding-left: 100px;" id="div">
         <table class="table table-hover">
             <thead>
             <tr>
@@ -54,58 +66,57 @@
             </tr>
             </thead>
             <tbody id="tb">
-           <!-- th:each="coinStrategy:${list}"-->
-            <!--<tr th:each="coinStrategy:${result}" id="t1">-->
-
             </tbody>
         </table>
-        <br>
-        <br>
-        <nav class="navbar navbar-default navbar-fixed-bottom"><!--贴在底部，不会消失-->
-            <div class="alert alert-info" style="padding-top:30px">
-                <p class="text">请先获取token</p>
-                <p class="text">所有参数请参考SDK对接文档正确填写</p>
-                <h5 class="text" style="color: crimson">合约地址大小写详情</h5>
-                <p class="text">0-不区分大小写,不做处理</p>
-                <p class="text">1-大写处理</p>
-                <p class="text">2-小写处理</p>
-            </div>
-        </nav>
     </div>
-
+</div>
+<div class="row" style="padding-bottom: 50px">
+    <nav class="navbar navbar-default navbar-fixed-bottom"><!--贴在底部，不会消失-->
+        <div class="alert alert-info" style="padding-top:0px">
+            <p class="text">请先获取token</p>
+            <p class="text">所有参数请参考SDK对接文档正确填写</p>
+            <h5 class="text" style="color: crimson">合约地址大小写详情</h5>
+            <p class="text">0-不区分大小写,不做处理</p>
+            <p class="text">1-大写处理</p>
+            <p class="text">2-小写处理</p>
+        </div>
+    </nav>
 </div>
 <script>
-    $(function( ) {
+    $(function () {
         tibia();
     });
-    function getBasePath(){
+
+    function getBasePath() {
         let path = window.location.pathname.split("/");
-        let basePath = path[0]+"/"+path[1]+"/";
+        let basePath = path[0] + "/" + path[1] + "/";
         return basePath;
     }
-    function tibia(){
-            $.ajax({
-                type: "get",
-                url: getBasePath()+"/api/strategyInfo",
-                contentType: 'application/json',
-                success: function (data) {
-                    let str = "";
-                    console.log(data);
-                    for(let i=0;i<data.length;i++){
-                        let stu = data[i];
-                        str += "<tr align='left'>";
-                        str += "<td>" + stu.id + "</td>";
-                        str += "<td>" + stu.mainType + "</td>";
-                        str += "<td>" + stu.subType + "</td>";
-                        str += "<td>" + stu.upOrLowerRule + "</td>";
-                        str += "<tr>";
-                    }
-                    $("#tb").append(str);
-                },
-                error: function (data) {
-                    alert("测试失败");
+
+    function tibia() {
+        $.ajax({
+            type: "get",
+            url: getBasePath() + "/api/strategyInfo",
+            contentType: 'application/json',
+            success: function (data) {
+                let str = "";
+                console.log(data);
+                console.log(data.length);
+                for (let i = 0; i < data.length; i++) {
+                    let stu = data[i];
+                    str += "<tr align='left'>";
+                    str += "<td>" + stu.id + "</td>";
+                    str += "<td>" + stu.mainType + "</td>";
+                    str += "<td>" + stu.subType + "</td>";
+                    str += "<td>" + stu.upOrLowerRule + "</td>";
+                    str += "<tr>";
                 }
-            });
+                $("#tb").append(str);
+            },
+            error: function (data) {
+                alert("测试失败");
+            }
+        });
     }
 </script>
 </body>

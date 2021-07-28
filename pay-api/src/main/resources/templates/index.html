@@ -15,7 +15,7 @@
 </div>
 <div class="row">
     <div class="col-sm-1" style="padding: 10px 20px 10px 0px;">
-        <p class="text" style="text-align: center ;color:deepskyblue ;padding-left: 30px" >调试菜单</p>
+        <p class="text" style="text-align: center ;color:deepskyblue ;padding-left: 30px">调试菜单</p>
         <nav class="navbar bg-light">
             <ul class="navbar-nav" style="list-style:none" ;>
                 <li class="nav-item" style="padding:10px 0px 10px 0px">
@@ -46,34 +46,47 @@
     <div class="col-sm-5">
         <div style="padding: 10px 100px 10px 0px;width:800px;">
             <form class="bs-example bs-example-form" role="form" id="form">
-                    <div class="input-group">
-                        <span class="input-group-addon">商户Id</span>
-                        <input id="mid" type="text" class="form-control" name="merchantId"  placeholder="请输入" required>
+                <div class="input-group">
+                    <span class="input-group-addon">商户Id</span>
+                    <input id="mid" type="text" class="form-control" name="merchantId" placeholder="请输入" required>
+                </div>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon">钱包编号</span>
+                    <input id="wno" type="text" class="form-control" name="walletNo" placeholder="请输入" required>
+                </div>
+                <br>
+                <div class=" input-group">
+                    <span class="input-group-addon">APIKEY</span>
+                    <input id="apk" type="text" class="form-control" name="apiKey" placeholder="请输入" required>
+                </div>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon">网关地址</span>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default" tabindex="-1" id="btn1">HTTP协议选择框</button>
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                tabindex="-1" id="btn2">
+                            <span class="caret"></span>
+                            <span class="sr-only">切换下拉菜单</span>
+                        </button>
+                        <ul class="dropdown-menu" id="ul">
+                            <li><a href="#">http://</a></li>
+                            <li><a href="#">https://</a></li>
+                        </ul>
                     </div>
-                    <br>
-                    <div class="input-group">
-                        <span class="input-group-addon">钱包编号</span>
-                        <input id="wno" type="text" class="form-control" name="walletNo" placeholder="请输入" required>
-                    </div>
-                    <br>
-                    <div class=" input-group">
-                        <span class="input-group-addon">APIKEY</span>
-                        <input id="apk" type="text" class="form-control" name="apiKey" placeholder="请输入" required>
-                    </div>
-                    <br>
-                    <div class="input-group">
-                        <span class="input-group-addon">网关地址</span>
-                        <input id="gwu" type="text" class="form-control" name="gatewayUrl" placeholder="请输入" required>
-                    </div>
-                    <br>
-                    <button id="btn" type="button" class="btn btn-default" onclick="tibia()" >提交</button>
+                    <input id="gwu" type="text" class="form-control" name="gatewayUrl" placeholder="请输入" required>
+                    <span class="input-group-addon" id="span">/gateway</span>
+                </div>
+                <br>
+                <button id="btn" type="button" class="btn btn-default" onclick="tibia()">提交</button>
             </form>
             <br>
+        </div>
             <div class="alert alert-info">
                 <p class="text">请先获取token</p>
                 <p class="text">所有参数请参考SDK对接文档正确填写</p>
             </div>
-        </div>
     </div>
     <div class="col-sm-5" style="padding: 10px 100px 10px 100px;">
         <h4>返回结果</h4>
@@ -81,68 +94,86 @@
         </textarea>
     </div>
 </div>
+
+
 <script type="text/javascript">
-    function  getBasePath(){
+    let urlWay="";
+    $(function () {
+       $('#ul').children('li').each(function (index){
+           $(this).bind('click',function(){
+               $('#btn1').html(this.innerText);
+           })
+           }
+       )
+    });
+    function getcallUrl(){
+        urlWay= $('#btn1').text()+$('#gwu').val()+$('#span').text();
+        return urlWay.trim();
+    }
+    function getBasePath() {
         let path = window.location.pathname.split("/");
-        let basePath = path[0]+"/"+path[1]+"/";
+        let basePath = path[0] + "/" + path[1] + "/";
         return basePath;
     }
-function tibia(){
-    //let data = $("form").serialize();
+
+    function tibia() {
+
+        //let data = $("form").serialize();
 //调用.form()方法来真正执行表单验证。
-    if(validateForm().form()){
-        $.ajax({
-            type: "post",
-            url: getBasePath()+"api/getToken",
-            data: JSON.stringify({
-                merchantId: $('#mid').val()
-                , walletNo: $('#wno').val()
-                , apiKey: $('#apk').val()
-                , gatewayUrl: $('#gwu').val()
-            }),
-            //data: JSON.stringify(data),
-            contentType: 'application/json',
-            success: function (result) {
-                console.log(result);
-                $('#tx').html(JSON.stringify(result.data));
-                if(result.code==500){
-                    $('#tx').html(JSON.stringify(result.message));
+        if (validateForm().form()) {
+            $.ajax({
+                type: "post",
+                url: getBasePath() + "api/getToken",
+                data: JSON.stringify({
+                    merchantId: $('#mid').val()
+                    , walletNo: $('#wno').val()
+                    , apiKey: $('#apk').val()
+                    , gatewayUrl: getcallUrl()
+                }),
+                //data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (result) {
+                    console.log(result);
+                    $('#tx').html(JSON.stringify(result.data));
+                    if (result.code == 500) {
+                        $('#tx').html(JSON.stringify(result.message));
+                    }
+                    if (result.code == 50010 && result.code != 200) {
+                        $('#tx').html(JSON.stringify(result.message));
+                    }
+                    if (result.code == 50006 && result.code != 200) {
+                        $('#tx').html(JSON.stringify(result.message));
+                    }
+                    if (result.code == 50003 && result.code != 200) {
+                        $('#tx').html(JSON.stringify(result.message));
+                    }
+                },
+                error: function (result) {
+                    $('#tx').html(result.state);
                 }
-                if(result.code==50010 && result.code!=200){
-                    $('#tx').html(JSON.stringify(result.message));
-                }
-                if(result.code==50006&& result.code!=200){
-                    $('#tx').html(JSON.stringify(result.message));
-                }
-                if(result.code==50003&& result.code!=200){
-                    $('#tx').html(JSON.stringify(result.message));
-                }
+            });
+
+        }
+    }
+
+    //1、定义表单验证的方法，返回表单验证结果：true或false
+    //（此处并不执行表单验证，只是定义一个有返回值的方法）
+    function validateForm() {
+        return $("#form").validate({
+            rules: {
+                merchantId: {required: true},
+                walletNo: {required: true},
+                apiKey: {required: true},
+                gatewayUrl: {required: true}
             },
-            error: function (result) {
-                $('#tx').html(result.state);
+            messages: {
+                merchantId: {required: "这是必填字段"},
+                walletNo: {required: "这是必填字段"},
+                apiKey: {required: "这是必填字段"},
+                gatewayUrl: {required: "这是必填字段"}
             }
         });
-
     }
-}
-//1、定义表单验证的方法，返回表单验证结果：true或false
-//（此处并不执行表单验证，只是定义一个有返回值的方法）
-function validateForm() {
-    return $("#form").validate({
-        rules: {
-            merchantId : {required: true},
-            walletNo: {required: true},
-            apiKey:{required: true},
-            gatewayUrl:{required: true}
-        },
-        messages: {
-            merchantId: {required: "这是必填字段"},
-            walletNo: {required: "这是必填字段"},
-            apiKey:{required: "这是必填字段"},
-            gatewayUrl:{required: "这是必填字段"}
-        }
-    });
-}
 
 </script>
 </body>
