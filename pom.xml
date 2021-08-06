@@ -100,18 +100,4 @@
             </plugin>
         </plugins>
     </build>
-    <distributionManagement>
-        <repository>
-            <id>lola-release</id>
-            <name>lola-release-respository</name>
-            <url>http://maven.yuanxin.cn/repository/maven-releases/</url>
-        </repository>
-
-        <snapshotRepository>
-            <id>lola-snapshots</id>
-            <name>lola-snapshots-respository</name>
-            <url>http://maven.yuanxin.cn/repository/maven-snapshots/</url>
-        </snapshotRepository>
-
-    </distributionManagement>
 </project>
