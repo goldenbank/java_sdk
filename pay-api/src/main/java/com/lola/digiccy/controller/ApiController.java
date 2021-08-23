@@ -148,6 +148,13 @@ public class ApiController {
         return list;
     }
 
+    /**
+     * 交易回调处理demo
+     * @param tradeNotify
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/back")
     public ApiResult<?> blackish(@RequestBody TopApiResponse.TradeNotify tradeNotify,HttpServletRequest request) throws Exception {
         //正式环境下要进行签名验证
@@ -198,8 +205,7 @@ public class ApiController {
                 // TODO 交易完成 商户业务处理
                 break;
             }
-            case TradeConstant.WithdrawStatus.FAILED:
-            case TradeConstant.WithdrawStatus.SEND_FAILED: {
+            case TradeConstant.WithdrawStatus.FAILED: {
                 logger.error("交易记录[{}],业务编号[{}],地址[{}],金额[{}],状态[{}]交易失败", trade.getTxId(), trade.getOuterId(), trade.getAddress(), trade.getAmount(), trade.getStatus());
                 // TODO 交易失败 商户业务处理
                 break;
@@ -224,27 +230,13 @@ public class ApiController {
         //TODO 通过主币精度获取
        //BigDecimal fee = new BigDecimal(trade.getFee()).divide(BigDecimal.TEN.pow(feeScale), feeScale, RoundingMode.DOWN);
         switch (trade.getStatus()) {
-            case TradeConstant.WithdrawStatus.TRANSFERING: {
-                logger.info("业务编号[{}],地址[{}],金额[{}],状态[{}]审核通过", trade.getOuterId(), trade.getAddress(), trade.getAmount(), trade.getStatus());
-                // TODO 审核通过 商户业务处理
-                break;
-            }
-            case TradeConstant.WithdrawStatus.REJECT: {
-                logger.warn("业务编号[{}],地址[{}],金额[{}],状态[{}]审核驳回", trade.getOuterId(), trade.getAddress(), trade.getAmount(), trade.getStatus());
-                // TODO 审核驳回 商户业务处理
-                break;
-            }
+
             case TradeConstant.WithdrawStatus.COMPLETED: {
                 logger.error("交易记录[{}],业务编号[{}],地址[{}],金额[{}],状态[{}]交易完成", trade.getTxId(), trade.getOuterId(), trade.getAddress(), trade.getAmount(), trade.getStatus());
                 // TODO 交易完成 商户业务处理
                 break;
             }
-            case TradeConstant.WithdrawStatus.FAILED:
-            case TradeConstant.WithdrawStatus.SEND_FAILED: {
-                logger.error("交易记录[{}],业务编号[{}],地址[{}],金额[{}],状态[{}]交易失败", trade.getTxId(), trade.getOuterId(), trade.getAddress(), trade.getAmount(), trade.getStatus());
-                // TODO 交易失败 商户业务处理
-                break;
-            }
+
             default:
                 logger.warn("未处理状态【{}】", trade.getStatus());
                 return false;
